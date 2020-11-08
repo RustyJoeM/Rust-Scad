@@ -13,6 +13,11 @@ use std::vec::Vec;
 pub struct ScadFile {
     objects: Vec<ScadObject>,
 
+    /// List of .scad scripts to be included.
+    /// Current implementation does not allow to use include statement anywhere in file as it should.
+    /// (for own variable pre-setting)
+    includes: Vec<String>,
+
     detail: i32,
 }
 
@@ -20,6 +25,8 @@ impl ScadFile {
     pub fn new() -> ScadFile {
         ScadFile {
             objects: Vec::new(),
+
+            includes: Vec::new(),
 
             detail: 0,
         }
@@ -36,11 +43,19 @@ impl ScadFile {
             result = result + "$fn=" + &self.detail.to_string() + ";\n";
         }
 
+        for include in &self.includes {
+            result = result + &format!("include <{}>", include) + "\n";
+        }
+
         for object in &self.objects {
             result = result + &object.get_code() + "\n";
         }
 
         result
+    }
+
+    pub fn add_include(&mut self, include: String) {
+        self.includes.push(include);
     }
 
     pub fn add_object(&mut self, object: ScadObject) {
