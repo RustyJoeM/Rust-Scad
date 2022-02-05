@@ -2,6 +2,7 @@ use nalgebra as na;
 use std::string::*;
 
 use std::rc::Rc;
+use std::string::*;
 use std::vec::Vec;
 
 use crate::scad_type::*;
